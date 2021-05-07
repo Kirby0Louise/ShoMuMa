@@ -1,0 +1,151 @@
+ShoMuMa New Generation Visual Novel Format Specification
+
+Revision - v2
+Author - Kirby0Louise
+
+
+
+[Visual Novel Name].vn
+
+Address - Size - Variable Name - Description
+
+//VN Header
+0x0 - 0x1 - VER_NUM - ShoMuMa Version Number
+0x1 - 0x9 - MAGIC - "MAGIC_SMM" magic constant and header EOF
+
+//Menu Table
+//First entry is the main menu and is loaded at boot
+0xA - 0x0 - MENU0 - Menu entry
+0xA - Varies - MENU0_SELECT0 - Plaintext containing the selection text
+0xA+MENU0_SELECT0 - Varies - MENU_SELECT0_COMMAND - Command to run when this selection is made
+0xA+SUM_OF(MENU_SELECT[X-1]) - Varies - MENU0_SELECT[X] - Plaintext containing the selection text
+0xA+SUM_OF(MENU_SELECT[X-1])+MENU_SELECT[X] - Varies - MENU_SELECT[X]_COMMAND - Command to run when this selection is made
+0xA+SUM_OF(MENU[X-1]) - 0x0 - MENU[X] - Menu entry
+MAGIC
+
+//Command Table
+
+0xA0 - Command character, to type a literal ASCII accented lowercase a follow with another command character
+0xA1 - OpenFileDialog
+0xA2 - SaveFileDialog
+0xA3 - Exit
+0xA4 - Branch to [MENU]
+0xA5 - Branch to [SCENE_ID]
+0xA6 - Change engine-level variable [eVariable] to [64-bit floating point constant]
+0xA7 - Change engine-level variable [eVariable] to [64-bit int constant]
+0xA8 - Change engine-level variable [eVariable] to the default value
+0xA9 - Start Hiragana sequence, use 0x00 to escape
+0xAA - Start Katakana sequence, use 0x00 to escape
+0xAB - Start Kanji sequence, use 0x0000 to escape
+
+
+
+[Story].smm
+
+.smm files can be seen as a hybrid between data packs and interpreted languages.  Each new box of text in the VN is represented as a scene entry in the .smm file.  Scene entries are executed in sequntial order.  Decisions and branching paths are made by specifying a scene should supply one as well as the choices and where these choices branch to
+
+All data entries have no spacing unless specified
+
+Variable Name - Description
+
+SCENE_ENTRY[SCENE_ID] - Scene entry ID
+SCENE_FLAGS[SCENE_ID] - Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, N/A, N/A, if scene is command logic execution only, if this scene has a player choice that will appear after the text is displayed)
+MAGIC
+
+
+//Background images
+//Skipped if bit 6 of SCENE_FLAGS is true
+SCENE_BG0 - Relative path from game.vn to furthest back background image.  Images can be any format, but the engine should render the final BG image as if it were a Dolby Vision RGBA bitmap (12 bits per channel) if Dolby Vision is available.  If not, engine should fallback on interpreting as a HDR-10 RGBA bitmap (10 bits per channel) if HDR-10 is available.  Otherwise it should be rendered as if it were a 32-bit RGBA bitmap (8 bits per channel)
+SCENE_BG[X] - Relative path from game.vn to closest forward background image.  Images can be any format, but the engine should render the final BG image as if it were a Dolby Vision RGBA bitmap (12 bits per channel) if Dolby Vision is available.  If not, engine should fallback on interpreting as a HDR-10 RGBA bitmap (10 bits per channel) if HDR-10 is available.  Otherwise it should be rendered as if it were a 32-bit RGBA bitmap (8 bits per channel)
+MAGIC - Indicates end of BG layers for this scene
+
+//Sprites
+//Skipped if bit 6 of SCENE_FLAGS is true
+SPRITE_SP0 - Relative path from game.vn to furthest back sprite image.  Images can be any format, but the engine should render the final sprite image as if it were a Dolby Vision RGBA bitmap (12 bits per channel) if Dolby Vision is available.  If not, engine should fallback on interpreting as a HDR-10 RGBA bitmap (10 bits per channel) if HDR-10 is available.  Otherwise it should be rendered as if it were a 32-bit RGBA bitmap (8 bits per channel)
+SPRITE_SP[X] - Relative path from game.vn to closest forward sprite image.  Images can be any format, but the engine should render the final sprite image as if it were a Dolby Vision RGBA bitmap (12 bits per channel) if Dolby Vision is available.  If not, engine should fallback on interpreting as a HDR-10 RGBA bitmap (10 bits per channel) if HDR-10 is available.  Otherwise it should be rendered as if it were a 32-bit RGBA bitmap (8 bits per channel)
+MAGIC - Indicates end of sprites for this scene
+
+//Text
+//Skipped if bit 6 of SCENE_FLAGS is true
+SCENE_SPEAKER - Plaintext containing the text to be rendered in the speaker subtitle box for this scene
+SCENE_TEXT - Plaintext containing the text to be rendered in the subtitle box for this scene
+MAGIC - Indicates end of text for this scene
+
+//Decisions
+//Skipped if bit 6 of SCENE_FLAGS is true or bit 7 of SCENE_FLAGS is false
+SCENE_D0 - Plaintext containing the text to be rendered in the first decision box
+SCENE_D0_FILE_BRANCH - Relative path to the .smm file to branch to if this option is taken
+SCENE_D0_SCENE_BRANCH - SCENE_ID to jump to if this option is taken
+SCENE_D[X] - Plaintext containing the text to be rendered in the last decision box
+SCENE_D[X]_FILE_BRANCH - Relative path to the .smm file to branch to if this option is taken
+SCENE_D[X]_SCENE_BRANCH - SCENE_ID to jump to if this option is taken
+MAGIC
+
+//BGM
+//Skipped if bit 6 of SCENE_FLAGS is true
+SCENE_BGM - Relative path from game.vn to current scene BGM
+SCENE_BGM_LOOP - Boolean value representing if the BGM should loop
+MAGIC
+
+//Voice
+//Skipped if bit 6 of SCENE_FLAGS is true
+SCENE_VOICE - Relative path from game.vn to current scene voice
+MAGIC
+
+//Command Table
+0xA0 - Command character, to type a literal ASCII accented lowercase a follow with another command character
+0xA1 - Start Hiragana sequence, use 0x00 to escape
+0xA2 - Start Katakana sequence, use 0x00 to escape
+0xA3 - Start Kanji sequence, use 0x0000 to escape
+0xA4 - Unconditional branch to [relative file path.smm], [SCENE_ID], only works between scenes
+0xA5 - Load [variable] into register Z
+0xA6 - Load [64-bit floating point constant] into register Z
+0xA7 - Store Z in [variable]
+0xA8 - Increment register pointer
+0xA9 - Decrement register pointer
+0xAA - Zero register pointer
+0xAB - Switch between INT64 and FP64 modes
+0xAC - Conditional branch to [relative file path.smm], [SCENE_ID] if Z0 >= Z1
+0xAD - Add [64-bit constant] to Z
+0xAE - Add Z1 to Z0
+0xAF - Subtract [64-bit constant] from Z
+0xB0 - Subtract Z1 from Z0
+0xB1 - Multiply Z by [64-bit constant]
+0xB2 - Multiply Z0 by Z1
+0xB3 - Divide Z by [64-bit constant]
+0xB4 - Divide Z0 by Z1
+
+
+
+[Save File].sav
+
+//Save files stored in /save/ relative to game.vn
+
+//SAVE HEADER
+SAVE_TITLE - Plaintext to be displayed for save file's title
+SAVE_SUBTITLE - Plaintext to be displayed for save file's subtitle
+MAGIC
+
+//SAVE DATA
+SAVE_SCENE_FILE - Relative path to the .smm file containing the scene to resume to
+SAVE_SCENE_ID - Scene ID to resume to
+EVARIABLE_DATA - Array of 64-bit entries representing proper engine variables to set on resume
+VARIABLE_D0_NAME - Name of variable to set on resume
+VARIABLE_D0_VALUE - 64-bit value of variable to set on resume
+VARIABLE_D[X]_NAME - Name of variable to set on resume
+VARIABLE_D[X]_VALUE - 64-bit value of variable to set on resume
+MAGIC
+
+
+//Command Table
+0xA0 - Command character, to type a literal ASCII accented lowercase a follow with another command character
+0xA1 - Start Hiragana sequence, use 0x00 to escape
+0xA2 - Start Katakana sequence, use 0x00 to escape
+0xA3 - Start Kanji sequence, use 0x0000 to escape
+
+
+
+[SPECIAL]
+
+Z - Currently pointed to data register, Z0 through Z7
+Register Pointer - Holds value of current data register Z points to, 0 through 7, wraps around when using increment/decrement at max/min
