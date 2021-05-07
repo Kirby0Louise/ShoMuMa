@@ -1,0 +1,17 @@
+ShoMuMa Changelog
+
+
+
+v1 - 7/31/2020
+
+- Initial release
+
+
+
+v2 - 5/7/2021
+
+- Added support for Dolby Vision HDR
+- Added support for save files
+- Japanese/Chinese characters now supported in main menu
+- Better defines how registers and internal logic engine works
+- Fixed a bug in logic engine with how bit 6 of SCENE_FLAGS was handled
