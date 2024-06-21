@@ -81,9 +81,10 @@ Defines platform specific preprocessor info.  Platforms and associated info list
 
 #### GBA
 
-Sprites as Backgrounds
-sprites_as_sprites - Render sprites as HW sprites.  Allows max BGs and sprites, but many large sprites can result in underdraw (default)
-sprites_as_bgs - Render sprites as backgrounds.  Allows for larger sprites without underdraw but sprites + BGs limited to 4 total
+Sprites as
+
+* `sprites_as_sprites` - Render sprites as HW sprites.  Allows max BGs and sprites, but many large sprites can result in underdraw (default)
+* `sprites_as_bgs` - Render sprites as backgrounds.  Allows for larger sprites without underdraw but sprites + BGs limited to 4 total
 
 Render Mode
 
