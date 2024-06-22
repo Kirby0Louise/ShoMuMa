@@ -34,13 +34,13 @@ If you are creating an engine for ShoMuMa, you should filter out all files excep
 Collection of scenes and menus.  Execution starts from the start of the file and continues linearly, unless a jump is specified.  Behavior for reading a scene beyond the end of the file is undefined!
 You should probably implement a debugging trap for when this happens!
 
-All scenes are either a regular scene, or a menu scene.
+#### SCENE_FLAGS
 
-SCENE_FLAGS - Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, N/A, SCENE_HAS_DECISIONS, SCENE_DIRECT_DATA_ENCODE, SCENE_IS_MENU)
+Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, N/A, SCENE_HAS_DECISIONS, SCENE_DIRECT_DATA_ENCODE, SCENE_IS_MENU)
 
-SCENE_IS_MENU - This scene is a menu and references different instructions
-SCENE_DIRECT_DATA_ENCODE - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
-SCENE_HAS_DECISIONS - This scene has reader decisions.  Mutually exclusive with menu scenes and behavior is undefined if they are forcefully combined
+* `SCENE_IS_MENU` - This scene is a menu and references different instructions
+* `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
+* `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu scenes and behavior is undefined if they are forcefully combined
 
 ---
 
