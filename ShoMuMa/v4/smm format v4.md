@@ -40,6 +40,8 @@ You should probably implement a debugging trap for when this happens!
 
 #### Scenes
 
+##### Standard Scene
+
 SCENE_FLAGS
 
 Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_DIRECT_DATA_ENCODE, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU)
@@ -69,8 +71,70 @@ Audio Table
 * `SCENE_VOICE` - Relative path from game.vn to current scene voice
 * `GVAR_MAGIC` - End of audio table
 
+---
+
+##### Decision Scene
+
+SCENE_FLAGS
+
+Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_DIRECT_DATA_ENCODE, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU)
+
+* `SCENE_IS_MENU` - This scene is a menu and references different instructions
+* `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
+* `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
+* `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
+
+Background Table
+* `SCENE_BG[X]` - Table of relative paths from .vn for each of the backgronds, drawn back to front.
+* `GVAR_MAGIC` - End of background table.
+
+Sprite Table
+* `SPRITE_DATA[X]` - Relative paths from .vn for each of the sprites
+* `SCENE_SPRITEX[X]` - 16-bit X position of sprite
+* `SCENE_SPRITEY[X]` - 16-bit Y position of sprite
+* `GVAR_MAGIC` - End of sprite table
+
+Text Table
+* `SCENE_SPEAKER` - Plaintext containing the text to be rendered in the speaker subtitle box for this scene
+* `SCENE_TEXT` - Plaintext containing the text to be rendered in the subtitle box for this scene
+* `GVAR_MAGIC` - End of text table
+
+Audio Table
+* `SCENE_BGM` - Relative path from game.vn to current scene BGM
+* `SCENE_VOICE` - Relative path from game.vn to current scene voice
+* `GVAR_MAGIC` - End of audio table
+
+Decision Table
+* `DECISION_TEXT[X]` - Text to be rendered in decision box
+* `DECISION_FILE_BRANCH[X]` - Relative path to the .smm file to branch to if this option is taken
+* `DECISION_SCENE_BRANCH[X]` - Offset into target .smm scene table to branch to
 
 ---
+
+##### Code Scene
+
+SCENE_FLAGS
+
+Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_DIRECT_DATA_ENCODE, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU)
+
+* `SCENE_IS_MENU` - This scene is a menu and references different instructions
+* `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
+* `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
+* `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
+
+---
+
+##### Menu Scene
+
+SCENE_FLAGS
+
+Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_DIRECT_DATA_ENCODE, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU)
+
+* `SCENE_IS_MENU` - This scene is a menu and references different instructions
+* `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
+* `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
+* `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
+
 
 
 ## Instructions
@@ -79,6 +143,19 @@ Instruction | Opcode | Arguments | Description
 |--|--|--|--|
 
 
+## Special
 
+Whenever plaintext is used, some commands are available, even if the scene is not marked as a command (0x00-0x9F are treated as ASCII).  These are mostly to facilitate typing other characters for foreign languages.
+
+Commands that can be used in plaintext are:
+
+* `CMD`
+* `HIRAGANA`
+* `KATAKANA`
+* `KANJI`
+* `HANGUL`
+* `CYRILLIC`
+* `UNICODE16`
+* `UNICODE32`
 
 
