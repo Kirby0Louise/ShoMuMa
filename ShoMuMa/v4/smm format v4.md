@@ -46,7 +46,7 @@ SCENE_FLAGS
 
 Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_DIRECT_DATA_ENCODE, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU)
 
-* `SCENE_IS_MENU` - This scene is a menu and references different instructions
+* `SCENE_IS_MENU` - This scene is a menu.  Mutually exclusive with code/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
 * `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
@@ -79,7 +79,7 @@ SCENE_FLAGS
 
 Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_DIRECT_DATA_ENCODE, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU)
 
-* `SCENE_IS_MENU` - This scene is a menu and references different instructions
+* `SCENE_IS_MENU` - This scene is a menu.  Mutually exclusive with code/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
 * `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
@@ -117,7 +117,7 @@ SCENE_FLAGS
 
 Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_DIRECT_DATA_ENCODE, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU)
 
-* `SCENE_IS_MENU` - This scene is a menu and references different instructions
+* `SCENE_IS_MENU` - This scene is a menu.  Mutually exclusive with code/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
 * `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
@@ -130,7 +130,7 @@ SCENE_FLAGS
 
 Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_DIRECT_DATA_ENCODE, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU)
 
-* `SCENE_IS_MENU` - This scene is a menu and references different instructions
+* `SCENE_IS_MENU` - This scene is a menu.  Mutually exclusive with code/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
 * `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
@@ -141,6 +141,16 @@ Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_DIRE
 
 Instruction | Opcode | Arguments | Description
 |--|--|--|--|
+`CMD` | 0xA0 | None | Indicates the following data is a command/instruction
+`HIRAGANA` | 0xA1 | None | Indicates the following data is Hiragana, encoded as a single byte offset from the start of the unicode block.  Escape with 0xFF
+`KATAKANA` | 0xA2 | None | Indicates the following data is Katakana, encoded as a single byte offset from the start of the unicode block.  Escape with 0xFF
+`KANJI` | 0xA3 | None | Indicates the following data is Kanji, encoded as 2 byte offset from the start of the unicode block.  Escape with 0xFFFF
+`UNICODE16` | 0xA4 | None | Indicates the following data is UTF-16.  Escape with 0xFFFF
+`UNICODE32` | 0xA5 | None | Indicates the following data is UTF-32.  Escape with 0xFFFF
+`LOADVAR` | 0xA6 | var_name, register | Load a variable from the save data into a register
+`STOREVAR` | 0xA7 | var_name, register | Store a value from a register to a variable in the save file
+`ENDCODE` | 0xFF | None | End of code block
+
 
 
 ## Special
@@ -153,8 +163,6 @@ Commands that can be used in plaintext are:
 * `HIRAGANA`
 * `KATAKANA`
 * `KANJI`
-* `HANGUL`
-* `CYRILLIC`
 * `UNICODE16`
 * `UNICODE32`
 
