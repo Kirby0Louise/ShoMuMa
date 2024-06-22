@@ -20,3 +20,8 @@ A - By placing the requirement of backwards/forwards compatibility on the engine
 Q - Explain the name
 
 A - Goblins and the Spring Breeze Concerto, Dream Demon's Spinning Fantasy of the Night Wind, The Lost Child and Thousands of Symphonies
+
+
+Q - What happened to v3?
+
+A - While developing it I realized I was going to need to make a major overhaul to the way things worked if I wanted people to actually be able to write to the standard.  So v3 was scrapped, but a number of ideas were used in v4
