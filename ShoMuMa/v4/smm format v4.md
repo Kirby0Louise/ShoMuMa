@@ -122,9 +122,15 @@ Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_DIRE
 * `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
 
+CODE
+
+Code to be executed.  See below for ShoMuMa instruction listing.
+
 ---
 
 ##### Menu Scene
+
+(Heavy WIP)
 
 SCENE_FLAGS
 
@@ -135,34 +141,65 @@ Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_DIRE
 * `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
 
+Menu Table
+* `MENU_D[X]` - Text for decision box
+* `MENU_D_FILE[X]` - Relative path to the .smm file to branch to if this option is taken
+* `MENU_D[X]_SCENE_BRANCH` - Scene number to branch to in the file.  Engine should find offset address in scene table and start reading from there
+* `GVAR_MAGIC` - End of menu table
 
+## Code
 
-## Instructions
+### Instructions
 
 Instruction | Opcode | Arguments | Description
 |--|--|--|--|
-`CMD` | 0xA0 | None | Indicates the following data is a command/instruction
-`HIRAGANA` | 0xA1 | None | Indicates the following data is Hiragana, encoded as a single byte offset from the start of the unicode block.  Escape with 0xFF
-`KATAKANA` | 0xA2 | None | Indicates the following data is Katakana, encoded as a single byte offset from the start of the unicode block.  Escape with 0xFF
-`KANJI` | 0xA3 | None | Indicates the following data is Kanji, encoded as 2 byte offset from the start of the unicode block.  Escape with 0xFFFF
-`UNICODE16` | 0xA4 | None | Indicates the following data is UTF-16.  Escape with 0xFFFF
-`UNICODE32` | 0xA5 | None | Indicates the following data is UTF-32.  Escape with 0xFFFF
-`LOADVAR` | 0xA6 | var_name, register | Load a variable from the save data into a register
-`STOREVAR` | 0xA7 | var_name, register | Store a value from a register to a variable in the save file
+`CMD` | 0xA0 | None | Indicates the following data is a custom command/instruction
+`KANA` | 0xA1 | None | Indicates the following data is Japanese kana (Hiragana and Katakana), encoded as a single byte offset from the start of the unicode blocks combined.  Escape with 0x00
+`UNICODE16` | 0xA2 | None | Indicates the following data is UTF-16.  Escape with 0x0000
+`UNICODE32` | 0xA3 | None | Indicates the following data is UTF-32.  Escape with 0x00000000
+`LOADVAR` | 0xA4 | var_name, register | Load a variable from the save data into a register
+`LOADCONST` | 0xA5 | value, register | Load a 64-bit constant into register
+`STOREVAR` | 0xA6 | var_name, register | Store a value from a register to a variable in the save file
+`SWAPCALCMODE` | 0xA7 | None | Switch between INT64 and FP64 calculation mode
+`ADDCONST` | 0xA8 | value, register | Add 64-bit constant to register
+`ADD` | 0xA9 | register, register2 | Add registers
+`SUBCONST` | 0xAA | value, register | Subtract 64-bit constant from register
+`SUB` | 0xAB | register, register2 | Subtract registers
+`MULCONST` | 0xAC | value, register | Multiply register by 64-bit constant
+`MUL` | 0xAD | register, register2 | Multiply registers
+`DIVCONST` | 0xAE | value, register | Divide register by 64-bit constant
+`DIV` | 0xAF | register, register2 | Divide registers
+`SAVEGAME` | 0xB0 | path | Save variables to path
+`LOADGAME` | 0xB1 | path | Load variables from path
+`CMPCONST` | 0xB2 | value, register | Compares the register to the constant using subtraction, setting flags as needed
+`CMP` | 0xB3 | register, register2 | Compares the register to the 2nd register using subtraction, settings flags as needed
+`BEQ` | 0xB4 | file_name, scene_id | Branch to file_name.smm, scene_id if Z is set
+`BNE` | 0xB5 | file_name, scene_id | Branch to file_name.smm, scene_id if Z is not set
+`BMI` | 0xB6 | file_name, scene_id | Branch to file_name.smm, scene_id if N is set
+`BPL` | 0xB7 | file_name, scene_id | Branch to file_name.smm, scene_id if N is not set
+`BVS` | 0xB8 | file_name, scene_id | Branch to file_name.smm, scene_id if V is set
+`BVC` | 0xB9 | file_name, scene_id | Branch to file_name.smm, scene_id if V is not set
 `ENDCODE` | 0xFF | None | End of code block
 
 
+### Registers
+
+16 64-bit general purpose registers are available, Z0-Z15.
+
+A 16-bit flags register, ZF is also available, and laid out as follows
+
+----|----|----|-NZV
 
 ## Special
 
 Whenever plaintext is used, some commands are available, even if the scene is not marked as a command (0x00-0x9F are treated as ASCII).  These are mostly to facilitate typing other characters for foreign languages.
 
+Note that "plaintext" does **NOT** include code strings (file names, variable names, etc....), all code must be written in ASCII/English!
+
 Commands that can be used in plaintext are:
 
 * `CMD`
-* `HIRAGANA`
-* `KATAKANA`
-* `KANJI`
+* `KANA`
 * `UNICODE16`
 * `UNICODE32`
 
