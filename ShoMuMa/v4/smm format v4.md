@@ -44,12 +44,14 @@ You should probably implement a debugging trap for when this happens!
 
 SCENE_FLAGS
 
-Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_DIRECT_DATA_ENCODE, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU)
+Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU, SCENE_DIRECT_DATA_ENCODE)
 
+* `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
 * `SCENE_IS_MENU` - This scene is a menu.  Mutually exclusive with code/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
 * `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
-* `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
+
+
 
 Background Table
 * `SCENE_BG[X]` - Table of relative paths from .vn for each of the backgronds, drawn back to front.
@@ -77,12 +79,12 @@ Audio Table
 
 SCENE_FLAGS
 
-Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_DIRECT_DATA_ENCODE, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU)
+Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU, SCENE_DIRECT_DATA_ENCODE)
 
+* `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
 * `SCENE_IS_MENU` - This scene is a menu.  Mutually exclusive with code/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
 * `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
-* `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
 
 Background Table
 * `SCENE_BG[X]` - Table of relative paths from .vn for each of the backgronds, drawn back to front.
@@ -115,12 +117,12 @@ Decision Table
 
 SCENE_FLAGS
 
-Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_DIRECT_DATA_ENCODE, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU)
+Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU, SCENE_DIRECT_DATA_ENCODE)
 
+* `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
 * `SCENE_IS_MENU` - This scene is a menu.  Mutually exclusive with code/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
 * `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
-* `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
 
 CODE
 
@@ -134,12 +136,12 @@ Code to be executed.  See below for ShoMuMa instruction listing.
 
 SCENE_FLAGS
 
-Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_DIRECT_DATA_ENCODE, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU)
+Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU, SCENE_DIRECT_DATA_ENCODE)
 
+* `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
 * `SCENE_IS_MENU` - This scene is a menu.  Mutually exclusive with code/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
 * `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
-* `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
 
 Menu Table
 * `MENU_D[X]` - Text for decision box
@@ -179,6 +181,10 @@ Instruction | Opcode | Arguments | Description
 `BPL` | 0xB7 | file_name, scene_id | Branch to file_name.smm, scene_id if N is not set
 `BVS` | 0xB8 | file_name, scene_id | Branch to file_name.smm, scene_id if V is set
 `BVC` | 0xB9 | file_name, scene_id | Branch to file_name.smm, scene_id if V is not set
+`EXIT` | 0xBA | None | Exit VN
+`RESET` | 0xBB | None | Sends a virtual reset signal (boot .vn again)
+`DEBUG` | 0xBC | None | Break into debugger
+`SHELLCODE` | 0xBD | path, wait | Execute shellcode from path.  If wait is true, will wait until child process exits.  On systems without process management, all code executes as if wait is true
 `ENDCODE` | 0xFF | None | End of code block
 
 
