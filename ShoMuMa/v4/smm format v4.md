@@ -24,7 +24,8 @@ If you are creating an engine for ShoMuMa, you should filter out all files excep
 0x0 | 0x9 | GVAR_MAGIC | ShoMuMa Magic ("MAGIC_SMM")
 0x9 | Varies | MAIN_SMM | relative path to .smm file to launch at boot
 0x9 + SIZE_OF(MAIN_SMM) | 0x2 | GVAR_SMM_VERSION | Revision of ShoMuMa
-0xB + SIZE_OF(MAIN_SMM) | 0x40 | XTR_PLATFORM_COMPAT | Extra data, platform compatibility.  2-bits per platform, 0 = incompatible, 1 = Unstable/Low performance, 2 = Supported, 3 = Optimized.  Platform order is same as enum declaration for SHASM, starting at LSB
+0xB + SIZE_OF(MAIN_SMM) | 0x1 | GVAR_HAS_SHELLCODE | Indicates if this VN uses `SHELLCODE`.  If disabled, the implementation MUST prevent execution of `SHELLCODE`.  If enabled, the implementation MUST warn the user before launch to only open unsafe VNs from sources they trust
+0xC + SIZE_OF(MAIN_SMM) | 0x40 | XTR_PLATFORM_COMPAT | Extra data, platform compatibility.  2-bits per platform, 0 = incompatible, 1 = Unstable/Low performance, 2 = Supported, 3 = Optimized.  Platform order is same as enum declaration for SHASM, starting at LSB
 
 ---
 
@@ -198,6 +199,8 @@ A 16-bit flags register, ZF is also available, and laid out as follows
 
 ## Special
 
+### Foriegn Languages
+
 Whenever plaintext is used, some commands are available, even if the scene is not marked as a command (0x00-0x9F are treated as ASCII).  These are mostly to facilitate typing other characters for foreign languages.
 
 Note that "plaintext" does **NOT** include code strings (file names, variable names, etc....), all code must be written in ASCII/English!
@@ -209,4 +212,5 @@ Commands that can be used in plaintext are:
 * `UNICODE16`
 * `UNICODE32`
 
+---
 
