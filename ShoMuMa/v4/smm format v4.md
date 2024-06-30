@@ -133,7 +133,7 @@ Code to be executed.  See below for ShoMuMa instruction listing.
 
 ##### Menu Scene
 
-(Heavy WIP)
+(Heavy WIP, and open to suggestions on how to improve)
 
 SCENE_FLAGS
 
@@ -145,10 +145,19 @@ Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_CODE
 * `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
 
 Menu Table
-* `MENU_D[X]` - Text for decision box
-* `MENU_D_FILE[X]` - Relative path to the .smm file to branch to if this option is taken
-* `MENU_D[X]_SCENE_BRANCH` - Scene number to branch to in the file.  Engine should find offset address in scene table and start reading from there
+* `MENU_TYPE` - Specifies the type of menu.  See below for values and their implementations
 * `GVAR_MAGIC` - End of menu table
+
+Menu Type | Value | Implementation
+|--|--|--|
+Main Menu | 0x00 | New Game, Continue, Options, Gallery, Exit
+Options | 0x01 | Master Volume, BGM Volume, SFX Volume, Voice Volume, Audio Channels (Mono/Stereo/Surround on compatible systems), Text Speed, Reset
+Save Data Management | 0x02 | Copy File, Erase File (optional on systems with limits on saves)
+Save | 0x03 | Save to slot (Optional on systems with limits on saves)
+Load | 0x04 | Load from slot (Optional on systems with limits on saves)
+Checkpoint | 0x05 | Save, Load, Options, Return to Title, Next Chapter
+
+Menu handling for implementations should be ideally called as a subroutine, and then returned from once VN processing should start again (i.e., don't `shomumaEngineMain(*main)` -> `menuHandler()` -> `shomumaEngineMain(*nextScene)` as this creates a stack memory leak, instead return the next scene to go to from `menuHandler()` and have `shomumaEngineMain()` handle where to jump to next using that return value).
 
 ## Code
 
