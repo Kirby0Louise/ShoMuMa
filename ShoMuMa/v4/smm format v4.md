@@ -45,12 +45,13 @@ You should probably implement a debugging trap for when this happens!
 
 SCENE_FLAGS
 
-Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU, SCENE_DIRECT_DATA_ENCODE)
+Boolean values representing flags for this scene (N/A, N/A, N/A, SCENE_HAS_RETURN, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU, SCENE_DIRECT_DATA_ENCODE)
 
 * `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
 * `SCENE_IS_MENU` - This scene is a menu.  Mutually exclusive with code/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
 * `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
+* `SCENE_HAS_RETURN` - This scene has an additional return scene ID to unconditional go to after it finishes.  Only valid for normal and code scenes
 
 
 
@@ -74,18 +75,22 @@ Audio Table
 * `SCENE_VOICE` - Relative path from game.vn to current scene voice
 * `GVAR_MAGIC` - End of audio table
 
+Return Scene (OPTIONAL)
+* `RETURN_SCENE` - file and scene ID to return to after this scene
+
 ---
 
 ##### Decision Scene
 
 SCENE_FLAGS
 
-Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU, SCENE_DIRECT_DATA_ENCODE)
+Boolean values representing flags for this scene (N/A, N/A, N/A, SCENE_HAS_RETURN, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU, SCENE_DIRECT_DATA_ENCODE)
 
 * `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
 * `SCENE_IS_MENU` - This scene is a menu.  Mutually exclusive with code/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
 * `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
+* `SCENE_HAS_RETURN` - This scene has an additional return scene ID to unconditional go to after it finishes.  Only valid for normal and code scenes
 
 Background Table
 * `SCENE_BG[X]` - Table of relative paths from .vn for each of the backgronds, drawn back to front.
@@ -118,16 +123,20 @@ Decision Table
 
 SCENE_FLAGS
 
-Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU, SCENE_DIRECT_DATA_ENCODE)
+Boolean values representing flags for this scene (N/A, N/A, N/A, SCENE_HAS_RETURN, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU, SCENE_DIRECT_DATA_ENCODE)
 
 * `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
 * `SCENE_IS_MENU` - This scene is a menu.  Mutually exclusive with code/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
 * `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
+* `SCENE_HAS_RETURN` - This scene has an additional return scene ID to unconditional go to after it finishes.  Only valid for normal and code scenes
 
 CODE
 
 Code to be executed.  See below for ShoMuMa instruction listing.
+
+Return Scene (OPTIONAL)
+* `RETURN_SCENE` - file and scene ID to return to after this scene
 
 ---
 
@@ -137,12 +146,13 @@ Code to be executed.  See below for ShoMuMa instruction listing.
 
 SCENE_FLAGS
 
-Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU, SCENE_DIRECT_DATA_ENCODE)
+Boolean values representing flags for this scene (N/A, N/A, N/A, SCENE_HAS_RETURN, SCENE_CODE_ONLY, SCENE_HAS_DECISIONS, SCENE_IS_MENU, SCENE_DIRECT_DATA_ENCODE)
 
 * `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
 * `SCENE_IS_MENU` - This scene is a menu.  Mutually exclusive with code/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
 * `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
+* `SCENE_HAS_RETURN` - This scene has an additional return scene ID to unconditional go to after it finishes.  Only valid for normal and code scenes
 
 Menu Table
 * `MENU_TYPE` - Specifies the type of menu.  See below for values and their implementations
