@@ -179,21 +179,21 @@ Instruction | Opcode | Arguments | Description
 `KANA` | 0xA1 | None | Indicates the following data is Japanese kana (Hiragana and Katakana), encoded as a single byte offset from the start of the unicode blocks combined.  Escape with 0x00
 `UNICODE16` | 0xA2 | None | Indicates the following data is UTF-16.  Escape with 0x0000
 `UNICODE32` | 0xA3 | None | Indicates the following data is UTF-32.  Escape with 0x00000000
-`LOADVAR` | 0xA4 | var_name, register | Load a variable from the save data into a register
-`LOADCONST` | 0xA5 | value, register | Load a 64-bit constant into register
-`STOREVAR` | 0xA6 | var_name, register | Store a value from a register to a variable in the save file
+`LOADVAR` | 0xA4 | register, var_name | Load a variable from the save data into a register
+`LOADCONST` | 0xA5 | register, value | Load a 64-bit constant into register
+`STOREVAR` | 0xA6 | register, var_name | Store a value from a register to a variable in the save file
 `SWAPCALCMODE` | 0xA7 | None | Switch between INT64 and FP64 calculation mode
-`ADDCONST` | 0xA8 | value, register | Add 64-bit constant to register
+`ADDCONST` | 0xA8 | register, value | Add 64-bit constant to register
 `ADD` | 0xA9 | register, register2 | Add registers
-`SUBCONST` | 0xAA | value, register | Subtract 64-bit constant from register
+`SUBCONST` | 0xAA | register, value | Subtract 64-bit constant from register
 `SUB` | 0xAB | register, register2 | Subtract registers
-`MULCONST` | 0xAC | value, register | Multiply register by 64-bit constant
+`MULCONST` | 0xAC | register, value | Multiply register by 64-bit constant
 `MUL` | 0xAD | register, register2 | Multiply registers
-`DIVCONST` | 0xAE | value, register | Divide register by 64-bit constant
+`DIVCONST` | 0xAE | register, value | Divide register by 64-bit constant
 `DIV` | 0xAF | register, register2 | Divide registers
 `SAVEGAME` | 0xB0 | path | Save variables to path
 `LOADGAME` | 0xB1 | path | Load variables from path
-`CMPCONST` | 0xB2 | value, register | Compares the register to the constant using subtraction, setting flags as needed
+`CMPCONST` | 0xB2 | register, value | Compares the register to the constant using subtraction, setting flags as needed
 `CMP` | 0xB3 | register, register2 | Compares the register to the 2nd register using subtraction, settings flags as needed
 `BEQ` | 0xB4 | file_name, scene_id | Branch to file_name.smm, scene_id if Z is set
 `BNE` | 0xB5 | file_name, scene_id | Branch to file_name.smm, scene_id if Z is not set
