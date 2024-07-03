@@ -1,6 +1,6 @@
 # SHASM
 
-SHASM (ShoMuma ASM) is a macro-assembly language for writing VNs more easily than manually.
+SHASM (SHomuma ASM) is a macro-assembly language for writing VNs more easily than manually.
 
 ## Preprocessor
 
@@ -111,13 +111,38 @@ Render Mode
 
 ## SHASM Instructions
 
+### Scene Control
 
+Instruction | Arguments | Description
+|--|--|--|
+`SCENE` | sceneName | Creates a new scene
+`SCENEFLAGS` | flags | Defines the flags for the above scene.  Must always be specified even if flags do not change
 
-SCENE
+### Graphics
 
-Defines a new scene with specified name.
+Instruction | Arguments | Description
+|--|--|--|
+`BG` | bgIndex, path | Draw a background at the specified index using the image at specified path
+`SPRITE` | spIndex, path | Defines a sprite at the specified index using the image at specified path
+`SPRITEX` | spIndex, pos | Sets the X position of the upper right corner of sprite specified by index to value specified
+`SPRITEY` | spIndex, pos | Sets the Y position of the upper right corner of sprite specified by index to value specified
 
+### Text
 
-SCENEFLAGS
+Instruction | Arguments | Description
+|--|--|--|
+`SPEAKER` | text | Sets the speaker nameplate to the specified string
+`TEXT` | text | Sets the scene text to the specified string
 
-Defines the flags for the scene.  Must ALWAYS follow SCENE, even if flags do not change.
+### Audio
+
+Instruction | Arguments | Description
+|--|--|--|
+`AUDIO` | path | Plays a voice line with the specified path
+`MUSIC` | path | Sets the scene BGM to the specified path
+
+### Decisions
+
+Instruction | Arguments | Description
+|--|--|--|
+`DECIDE` | text, scene | Create a decision with specified text, branching to specified scene if taken
