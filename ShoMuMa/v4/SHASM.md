@@ -145,4 +145,32 @@ Instruction | Arguments | Description
 
 Instruction | Arguments | Description
 |--|--|--|
-`DECIDE` | text, scene | Create a decision with specified text, branching to specified scene if taken
+`DECIDE` | text, path, scene | Create a decision with specified text, branching to specified scene if taken
+`RETURNSCENE` | path, scene | Return to the specified scene after finishing this one
+
+### Code
+Instruction | Arguments | Description
+|--|--|--|
+`LDR` | register, var/const | Loads data from specified variable or constant into specified register
+`STR` | register, var | Stores data from specified register to specified variable
+`ADD` | register, register2/const | Add specified register to specified value
+`SUB` | register, register2/const | Subtract specified value from specified register
+`MUL` | register, register2/const | Multiply specified register by specified value
+`DIV` | register, register2/const | Divide specified register by specified value
+`CMP` | register, register2/const | Compare via subtraction specified register with specified value, setting flags as needed
+`BEQ` | path, scene | Branch to specified scene if zero flag is set
+`BNE` | path, scene | Branch to specified scene if zero flag is not set
+`BMI` | path, scene | Branch to specified scene if negative flag is set
+`BPL` | path, scene | Branch to specified scene if negative flag is not set
+`BVS` | path, scene | Branch to specified scene if overflow flag is set
+`BVC` | path, scene | Branch to specified scene if overflow flag is not set
+
+### Misc
+
+Instruction | Arguments | Description
+|--|--|--|
+`EXIT` | None | Exit VN
+`RESET` | None | Send virtual reset signal (reload .vn)
+`SAVEGAME` | None | Save all variables to save data file
+`LOADGAME` | None | Load all variables from save data file
+`SHELLCODE` | path, bool | Execute shellcode, waiting until child process finishes if specified, requires unsafe be marked in .vn, processless platforms force wait
