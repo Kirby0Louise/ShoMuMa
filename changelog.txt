@@ -15,3 +15,9 @@ v2 - 5/7/2021
 - Japanese/Chinese characters now supported in main menu
 - Better defines how registers and internal logic engine works
 - Fixed a bug in logic engine with how bit 6 of SCENE_FLAGS was handled
+
+v4 - 7/5/2024
+
+- Large reworking of several parts
+- SHASM macro assembly language
+- New features
