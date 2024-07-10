@@ -41,46 +41,45 @@ You should probably implement a debugging trap for when this happens!
 
 #### Scenes
 
-A scene is the most basic building block of a ShoMuMa visual novel.  Scenes are composed of three parts, their header, data (optional, set SCENE_CODE_ONLY flag) and code.
+A scene is the most basic building block of a ShoMuMa visual novel.  Scenes are composed of two parts, their flags and data
 
 ##### Normal Scene
 
 SCENE_FLAGS
 
-Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, SCENE_IS_MENU, SCENE_HAS_DECISIONS, SCENE_CODE_ONLY, SCENE_DIRECT_DATA_ENCODE)
+Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, N/A, SCENE_IS_MENU, SCENE_HAS_DECISIONS, SCENE_DIRECT_DATA_ENCODE)
 
 * `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
-* `SCENE_CODE_ONLY` - This scene is code only.  Mutually exclusive with menu/decision scenes and behavior is undefined if they are forcefully combined
 * `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
 * `SCENE_IS_MENU` - This scene is a menu.  Mutually exclusive with code/decision scenes and behavior is undefined if they are forcefully combined
 
-Background Table (Optional)
+Background Table
 * `SCENE_BG[X]` - Table of relative paths from .vn for each of the backgronds, drawn back to front.
 * `GVAR_MAGIC` - End of background table.
 
-Sprite Table (Optional)
+Sprite Table
 * `SPRITE_DATA[X]` - Relative paths from .vn for each of the sprites
 * `SCENE_SPRITEX[X]` - 16-bit X position of sprite
 * `SCENE_SPRITEY[X]` - 16-bit Y position of sprite
 * `GVAR_MAGIC` - End of sprite table
 
-Text Table (Optional)
+Text Table
 * `SCENE_SPEAKER` - Plaintext containing the text to be rendered in the speaker subtitle box for this scene
 * `SCENE_TEXT` - Plaintext containing the text to be rendered in the subtitle box for this scene
 * `GVAR_MAGIC` - End of text table
 
-Audio Table (Optional)
+Audio Table
 * `SCENE_BGM` - Relative path from game.vn to current scene BGM
 * `SCENE_VOICE` - Relative path from game.vn to current scene voice
 * `GVAR_MAGIC` - End of audio table
 
-Decision Table (Optional)
+Decision Table
 * `DECISION_TEXT[X]` - Text to be rendered in decision box
 * `DECISION_FILE_BRANCH[X]` - Relative path to the .smm file to branch to if this option is taken
 * `DECISION_SCENE_BRANCH[X]` - Offset into target .smm scene table to branch to
 
 Code
-* `CODE` - Code for this scene to use.  See below for instructions.  Execution ends upon jumping to a new scene or hitting `ENDCODE`
+* `CODE_PTR` - Pointer into vn.COD for this scene to use.  See below for instructions.  Execution ends upon jumping to a new scene or hitting `ENDCODE`
 
 ##### Menu Scene
 
@@ -105,3 +104,72 @@ Menu handling for implementations should be ideally called as a subroutine, and 
 
 
 ---
+
+## Code
+
+### Instructions
+
+Instruction | Opcode | Arguments | Description
+|--|--|--|--|
+`CMD` | 0xA0 | None | Indicates the following data is a custom command/instruction
+`KANA` | 0xA1 | None | Indicates the following data is Japanese kana (Hiragana and Katakana), encoded as a single byte offset from the start of the unicode blocks combined.  Escape with 0x00
+`UNICODE16` | 0xA2 | None | Indicates the following data is UTF-16.  Escape with 0x0000
+`UNICODE32` | 0xA3 | None | Indicates the following data is UTF-32.  Escape with 0x00000000
+`LOADVAR` | 0xA4 | register, var_name | Load a variable from the save data into a register
+`LOADCONST` | 0xA5 | register, value | Load a 64-bit constant into register
+`STOREVAR` | 0xA6 | register, var_name | Store a value from a register to a variable in the save file
+`SWAPCALCMODE` | 0xA7 | None | Switch between INT64 and FP64 calculation mode
+`ADDCONST` | 0xA8 | register, value | Add 64-bit constant to register
+`ADD` | 0xA9 | register, register2 | Add registers
+`SUBCONST` | 0xAA | register, value | Subtract 64-bit constant from register
+`SUB` | 0xAB | register, register2 | Subtract registers
+`MULCONST` | 0xAC | register, value | Multiply register by 64-bit constant
+`MUL` | 0xAD | register, register2 | Multiply registers
+`DIVCONST` | 0xAE | register, value | Divide register by 64-bit constant
+`DIV` | 0xAF | register, register2 | Divide registers
+`SAVEGAME` | 0xB0 | path | Save variables to path
+`LOADGAME` | 0xB1 | path | Load variables from path
+`JMP` | 0xB2 | address | Unconditional jump to location in global code
+`JSR` | 0xB3 | address | Jump to subroutine at address.  Pushes the global code PC onto the code stack
+`RTS` | 0xB4 | None | Return from subroutine by popping global code PC from the code stack
+`JSC` | 0xB5 | file_name, scene_id | Jump to file_name.smm, scene_id and end code execution
+`CMPCONST` | 0xB6 | register, value | Compares the register to the constant using subtraction, setting flags as needed
+`CMP` | 0xB7 | register, register2 | Compares the register to the 2nd register using subtraction, settings flags as needed
+`BEQ` | 0xB8 | address | Branch to address if Z is set
+`BNE` | 0xB9 | address | Branch to address if Z is not set
+`BMI` | 0xBA | address | Branch to address if N is set
+`BPL` | 0xBB | address | Branch to address if N is not set
+`BVS` | 0xBC | address | Branch to address if V is set
+`BVC` | 0xBD | address | Branch to address if V is not set
+`EXIT` | 0xBE | None | Exit VN
+`RESET` | 0xBF | None | Sends a virtual reset signal (boot .vn again)
+`DEBUG` | 0xC0 | None | Break into debugger
+`SHELLCODE` | 0xC1 | path, wait | Execute shellcode from path.  If wait is true, will wait until child process exits.  On systems without process management, all code executes as if wait is true
+`ENDCODE` | 0xFF | None | End of code block
+
+
+### Registers
+
+16 64-bit general purpose registers are available, Z0-Z15.
+
+A 16-bit flags register, ZF is also available, and laid out as follows
+
+----|----|----|-NZV
+
+## Special
+
+### Foriegn Languages
+
+Whenever plaintext is used, some commands are available, even if the scene is not marked as a command (0x00-0x9F are treated as ASCII).  These are mostly to facilitate typing other characters for foreign languages.
+
+Note that "plaintext" does **NOT** include code strings (file names, variable names, etc....), all code must be written in ASCII/English!
+
+Commands that can be used in plaintext are:
+
+* `CMD`
+* `KANA`
+* `UNICODE16`
+* `UNICODE32`
+
+---
+
