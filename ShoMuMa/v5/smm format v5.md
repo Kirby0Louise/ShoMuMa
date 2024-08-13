@@ -118,33 +118,35 @@ Instruction | Opcode | Arguments | Description
 `LOADVAR` | 0xA4 | register, var_name | Load a variable from the save data into a register
 `LOADCONST` | 0xA5 | register, value | Load a 64-bit constant into register
 `STOREVAR` | 0xA6 | register, var_name | Store a value from a register to a variable in the save file
-`SWAPCALCMODE` | 0xA7 | None | Switch between INT64 and FP64 calculation mode
-`ADDCONST` | 0xA8 | register, value | Add 64-bit constant to register
-`ADD` | 0xA9 | register, register2 | Add registers
-`SUBCONST` | 0xAA | register, value | Subtract 64-bit constant from register
-`SUB` | 0xAB | register, register2 | Subtract registers
-`MULCONST` | 0xAC | register, value | Multiply register by 64-bit constant
-`MUL` | 0xAD | register, register2 | Multiply registers
-`DIVCONST` | 0xAE | register, value | Divide register by 64-bit constant
-`DIV` | 0xAF | register, register2 | Divide registers
-`SAVEGAME` | 0xB0 | path | Save variables to path
-`LOADGAME` | 0xB1 | path | Load variables from path
-`JMP` | 0xB2 | address | Unconditional jump to location in global code
-`JSR` | 0xB3 | address | Jump to subroutine at address.  Pushes the global code PC onto the code stack
-`RTS` | 0xB4 | None | Return from subroutine by popping global code PC from the code stack
-`JSC` | 0xB5 | file_name, scene_id | Jump to file_name.smm, scene_id and end code execution
-`CMPCONST` | 0xB6 | register, value | Compares the register to the constant using subtraction, setting flags as needed
-`CMP` | 0xB7 | register, register2 | Compares the register to the 2nd register using subtraction, settings flags as needed
-`BEQ` | 0xB8 | address | Branch to address if Z is set
-`BNE` | 0xB9 | address | Branch to address if Z is not set
-`BMI` | 0xBA | address | Branch to address if N is set
-`BPL` | 0xBB | address | Branch to address if N is not set
-`BVS` | 0xBC | address | Branch to address if V is set
-`BVC` | 0xBD | address | Branch to address if V is not set
-`EXIT` | 0xBE | None | Exit VN
-`RESET` | 0xBF | None | Sends a virtual reset signal (boot .vn again)
-`DEBUG` | 0xC0 | None | Break into debugger
-`SHELLCODE` | 0xC1 | path, wait | Execute shellcode from path.  If wait is true, will wait until child process exits.  On systems without process management, all code executes as if wait is true
+`MOVL` | 0xA7 | register, address | Load into register the address from scratchpad
+`MOVS` | 0xA8 | register, address | Store to scratchpad from register
+`SWAPCALCMODE` | 0xA9 | None | Switch between INT64 and FP64 calculation mode
+`ADDCONST` | 0xAA | register, value | Add 64-bit constant to register
+`ADD` | 0xAB | register, register2 | Add registers
+`SUBCONST` | 0xAC | register, value | Subtract 64-bit constant from register
+`SUB` | 0xAD | register, register2 | Subtract registers
+`MULCONST` | 0xAE | register, value | Multiply register by 64-bit constant
+`MUL` | 0xAF | register, register2 | Multiply registers
+`DIVCONST` | 0xB0 | register, value | Divide register by 64-bit constant
+`DIV` | 0xB1 | register, register2 | Divide registers
+`SAVEGAME` | 0xB2 | path | Save variables to path
+`LOADGAME` | 0xB3 | path | Load variables from path
+`JMP` | 0xB4 | address | Unconditional jump to location in global code
+`JSR` | 0xB5 | address | Jump to subroutine at address.  Pushes the global code PC onto the code stack
+`RTS` | 0xB6 | None | Return from subroutine by popping global code PC from the code stack
+`JSC` | 0xB7 | file_name, scene_id | Jump to file_name.smm, scene_id and end code execution
+`CMPCONST` | 0xB8 | register, value | Compares the register to the constant using subtraction, setting flags as needed
+`CMP` | 0xB9 | register, register2 | Compares the register to the 2nd register using subtraction, settings flags as needed
+`BEQ` | 0xBA | address | Branch to address if Z is set
+`BNE` | 0xBB | address | Branch to address if Z is not set
+`BMI` | 0xBC | address | Branch to address if N is set
+`BPL` | 0xBD | address | Branch to address if N is not set
+`BVS` | 0xBE | address | Branch to address if V is set
+`BVC` | 0xBF | address | Branch to address if V is not set
+`EXIT` | 0xC0 | None | Exit VN
+`RESET` | 0xC1 | None | Sends a virtual reset signal (boot .vn again)
+`DEBUG` | 0xC2 | None | Break into debugger
+`SHELLCODE` | 0xC3 | path, wait | Execute shellcode from path.  If wait is true, will wait until child process exits.  On systems without process management, all code executes as if wait is true
 `ENDCODE` | 0xFF | None | End of code block
 
 
