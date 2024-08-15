@@ -47,10 +47,10 @@ A scene is the most basic building block of a ShoMuMa visual novel.  Scenes are 
 
 SCENE_FLAGS
 
-Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, N/A, SCENE_IS_MENU, SCENE_HAS_DECISIONS, SCENE_DIRECT_DATA_ENCODE)
+Boolean values representing flags for this scene (N/A, N/A, N/A, N/A, N/A, SCENE_IS_MENU, SCENE_DECISIONS_BRANCHING_CODE, SCENE_HAS_DECISIONS)
 
-* `SCENE_DIRECT_DATA_ENCODE` - Treats the data for the scene as a length and raw data encode for each of the parts (note that text is always encoded rather than pulled from a file), max 4GB for each data entry.  May speed up build times at the cost of huge bloat.  See directencode.txt for details
 * `SCENE_HAS_DECISIONS` - This scene has reader decisions.  Mutually exclusive with menu/code scenes and behavior is undefined if they are forcefully combined
+* `SCENE_DECISIONS_BRANCHING_CODE` - Each decision has its own code pointer
 * `SCENE_IS_MENU` - This scene is a menu.  Mutually exclusive with code/decision scenes and behavior is undefined if they are forcefully combined
 
 Background Table
@@ -79,7 +79,7 @@ Decision Table
 * `DECISION_SCENE_BRANCH[X]` - Offset into target .smm scene table to branch to
 
 Code
-* `CODE_PTR` - Pointer into vn.COD for this scene to use.  See below for instructions.  Execution ends upon jumping to a new scene or hitting `ENDCODE`
+* `CODE_PTR` - Pointer(s) into vn.COD for this scene to use.  See below for instructions.  Execution ends upon jumping to a new scene or hitting `ENDCODE`
 
 ##### Menu Scene
 
