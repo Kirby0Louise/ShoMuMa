@@ -4,6 +4,14 @@ SHASM (SHomuma ASM) is a macro-assembly language for writing VNs more easily tha
 
 ## Preprocessor
 
+`#pragma shellcode`
+
+Enables shellcode in this visual novel.
+
+`pragma autonewline`
+
+Automatically creates newlines when running out of space in the dialog box.
+
 `#pragma platform [PLATFORM]`
 
 Defines the target platform.  This does not ensure that the VN only runs on said platform, but does help the assembler and engine optimize certain aspects.
@@ -51,6 +59,11 @@ Render Mode
 * `tile_mode` - use DS Mode 0.  Max HW backgrounds, and fast, but limited to 16 colors per tile and no precision drawing (default)
 * `swapchain_mode` - use DS 3D GPU.  Unlimited SW backgrounds, 262,144 colors, precision drawing
 
+Shellcode CPU
+
+* `shellcode9` - use NDS9 to execute shellcode.  Faster and more capable than NDS7, but will block code execution like on GBA
+* `shellcode7` - use NDS7 to execute shellcode.  Slower with less features, but runs in parallel with main engine
+
 2nd screen behavior
 
 [WIP]
@@ -74,7 +87,10 @@ Render Mode
 
 ### Saturn
 
+BG Renderer
 
+* `bgs_on_vdp1` - render backgrounds on VDP1.  Allows for bypassing the limit of 5 backgrounds of VDP2, but slower and lacking in transparency support
+* `bgs_on_vdp2` - render backgrounds on VDP2.  Fast and full transparency support, but limited to 5 BGs at a time
 
 
 
@@ -184,3 +200,9 @@ Instruction | Arguments | Description
 `SAVEGAME` | None | Save all variables to save data file
 `LOADGAME` | None | Load all variables from save data file
 `SHELLCODE` | path, bool | Execute shellcode, waiting until child process finishes if specified, requires unsafe be marked in .vn, processless platforms force wait
+
+### Hardcoded Data
+
+Line prefix | Arguments | Description
+|--|--|--|
+`.raw` | data | Insert raw data at this point
