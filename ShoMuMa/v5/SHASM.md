@@ -66,7 +66,9 @@ Shellcode CPU
 
 2nd screen behavior
 
-[WIP]
+* `screen2_standard` = Use standard UI for screen 2
+* `screen2_standard_and_text` - Use modified standard UI and render text on bottom screen
+* `screen2_custom` - Hands control over to ARM7 program to render 2nd screen [WIP]
 
 ### Vita
 
